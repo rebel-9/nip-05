@@ -1,28 +1,37 @@
-name: Deploy GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
-push:
-branches:
-- main
+  push:
+    branches:
+      - main  # Adjust branch name if necessary
 
 jobs:
-deploy:
-runs-on: ubuntu-latest
-steps:
-  - name: Checkout repository
-    uses: actions/checkout@v4  # Update to latest version that supports Node.js 20
+  deploy:
+    runs-on: ubuntu-latest
 
-  - name: Setup Node.js
-    uses: actions/setup-node@v4  # Update to latest version that supports Node.js 20
-    with:
-      node-version: '14'  # Node.js 14 is still supported as per your original configuration
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4  # Latest version
 
-  - name: Rename well-known directory
-    run: |
-      mv wellknown .well-known
+      - name: Setup Node.js
+        uses: actions/setup-node@v4  # Latest version
+        with:
+          node-version: '14'
 
-  - name: Deploy to GitHub Pages
-    uses: peaceiris/actions-gh-pages@v3
-    with:
-      github_token: ${{ secrets.GITHUB_TOKEN }}
-      publish_dir: ./
+      - name: Install dependencies
+        run: npm install  # Modify as per your build setup (if using npm)
+
+      - name: Build site
+        run: npm run build  # Modify as per your build setup (if using npm)
+
+      - name: Ensure .well-known directory exists
+        run: mkdir -p .well-known  # Ensure the .well-known directory exists
+
+      - name: Create .nojekyll file
+        run: echo '' > .well-known/.nojekyll  # Create a .nojekyll file inside .well-known
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./  # Publish from the root directory
