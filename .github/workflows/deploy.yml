@@ -1,29 +1,28 @@
 name: Deploy GitHub Pages
 
 on:
-  push:
-    branches:
-      - main
+push:
+branches:
+- main
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+deploy:
+runs-on: ubuntu-latest
+steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4  # Update to latest version that supports Node.js 20
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+  - name: Setup Node.js
+    uses: actions/setup-node@v4  # Update to latest version that supports Node.js 20
+    with:
+      node-version: '14'  # Node.js 14 is still supported as per your original configuration
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
+  - name: Rename well-known directory
+    run: |
+      mv wellknown .well-known
 
-      - name: Rename well-known directory
-        run: |
-          mv wellknown .well-known
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
+  - name: Deploy to GitHub Pages
+    uses: peaceiris/actions-gh-pages@v3
+    with:
+      github_token: ${{ secrets.GITHUB_TOKEN }}
+      publish_dir: ./
