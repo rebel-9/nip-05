@@ -28,7 +28,7 @@ jobs:
         run: mkdir -p .well-known  # Ensure the .well-known directory exists
 
       - name: Create .nojekyll file
-        run: echo '' > .well-known/.nojekyll  # Create a .nojekyll file inside .well-known
+        run: echo '' > .nojekyll  # Create .nojekyll file at the root of the deployed content
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
